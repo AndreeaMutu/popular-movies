@@ -10,6 +10,10 @@ public class Movie {
     public Movie() {
     }
 
+    public Movie(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -48,5 +52,16 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "originalTitle='" + originalTitle + '\'' +
+                ", posterUrl='" + posterUrl + '\'' +
+                ", plotSynopsis='" + plotSynopsis + '\'' +
+                ", userRating='" + userRating + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                '}';
     }
 }
