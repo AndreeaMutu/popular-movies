@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
             Picasso.with(context)
                     .load(movie.getPosterUrl())
+                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .error(android.R.drawable.stat_notify_error)
                     .into(holder.posterImageView);
         }
 
