@@ -5,18 +5,21 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.andreea.popularmovies.model.Movie;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     public static final int COLUMNS = 2;
     private List<Movie> movieList = new ArrayList<>();
 
@@ -76,13 +79,23 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final PosterViewHolder holder, int position) {
-            Movie movie = movieList.get(position);
+            final Movie movie = movieList.get(position);
 
             Picasso.with(context)
                     .load(movie.getPosterUrl())
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
-                    .into(holder.posterImageView);
+                    .into(holder.posterImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.i(TAG, "Picasso successfully loaded poster for movie: " + movie);
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e(TAG, "Picasso failed to load poster for movie: " + movie);
+                        }
+                    });
         }
 
         @Override
