@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.model.MovieResponse;
+import com.andreea.popularmovies.utils.JsonUtils;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -154,12 +155,7 @@ public class MainActivity extends AppCompatActivity implements
                 String json = response.body().string();
                 Log.d(TAG, "loadInBackground: " + json);
 
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-                Gson gson = gsonBuilder.create();
-                MovieResponse movieResponse = gson.fromJson(json, MovieResponse.class);
-                Log.d(TAG, "parsed response: " + movieResponse);
-                return movieResponse.getResults();
+                return JsonUtils.parseMoviesResponse(json);
             } catch (IOException e) {
                 Log.e(TAG, "Failed to parse movies json response: ", e );
             }
