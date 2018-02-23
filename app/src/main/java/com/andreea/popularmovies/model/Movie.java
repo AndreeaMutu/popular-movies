@@ -1,53 +1,62 @@
 package com.andreea.popularmovies.model;
 
 public class Movie {
-    private String originalTitle;
-    private String posterUrl;
-    private String plotSynopsis;
-    private String userRating;
+    private long id;
+    private String title;
+    private String posterPath;
+    private String overview;
+    private double voteAverage;
     private String releaseDate;
 
     public Movie() {
     }
 
-    public Movie(String posterUrl) {
-        this.posterUrl = posterUrl;
+    public long getId() {
+        return id;
     }
 
-    public String getOriginalTitle() {
-        return originalTitle;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public Movie(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public String getPlotSynopsis() {
-        return plotSynopsis;
+    public String getTitle() {
+        return title;
     }
 
-    public String getUserRating() {
-        return userRating;
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
     public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public void setPlotSynopsis(String plotSynopsis) {
-        this.plotSynopsis = plotSynopsis;
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
-    public void setUserRating(String userRating) {
-        this.userRating = userRating;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public void setReleaseDate(String releaseDate) {
@@ -57,10 +66,11 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{" +
-                "originalTitle='" + originalTitle + '\'' +
-                ", posterUrl='" + posterUrl + '\'' +
-                ", plotSynopsis='" + plotSynopsis + '\'' +
-                ", userRating='" + userRating + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", overview='" + overview + '\'' +
+                ", voteAverage=" + voteAverage +
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
     }

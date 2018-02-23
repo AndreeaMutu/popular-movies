@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.andreea.popularmovies.model.Movie;
+import com.andreea.popularmovies.model.MovieResponse;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -22,10 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements
@@ -33,8 +35,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int COLUMNS = 2;
     private static final int MOVIES_LOADER_ID = 77;
-    private List<Movie> movieList = new ArrayList<>();
-    private MoviesAdapter adapter;
+    private RecyclerView recyclerView;
     private static final String API_KEY = BuildConfig.API_KEY;
 
     @Override
@@ -42,28 +43,12 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MoviesAdapter adapter = new MoviesAdapter(this, movieList);
-        fillListWithMockMovies();
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
+        recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
         // init loader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
-    }
-
-    private void fillListWithMockMovies() {
-        Movie m1 = new Movie("http://img.moviepostershop.com/ghostbusters-movie-poster-2016-1020775586.jpg");
-        movieList.add(m1);
-        movieList.add(m1);
-        movieList.add(m1);
-        movieList.add(m1);
-        movieList.add(m1);
-        movieList.add(m1);
-        movieList.add(m1);
     }
 
     @Override
@@ -73,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
-        movieList = data;
-//        adapter.notifyDataSetChanged();
+        Log.d(TAG, "onLoadFinished: " + data);
+        MoviesAdapter adapter = new MoviesAdapter(this, data);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -83,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private static class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterViewHolder> {
-
-
         private Context context;
         private List<Movie> movieList;
 
@@ -113,15 +98,16 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onBindViewHolder(final PosterViewHolder holder, int position) {
             final Movie movie = movieList.get(position);
-
+            String baseUrl = "http://image.tmdb.org/t/p/w185/";
+            String moviePosterUrl = baseUrl + movie.getPosterPath();
             Picasso.with(context)
-                    .load(movie.getPosterUrl())
+                    .load(moviePosterUrl)
                     .placeholder(android.R.drawable.progress_indeterminate_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(holder.posterImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Log.i(TAG, "Picasso successfully loaded poster for movie: " + movie);
+                            Log.d(TAG, "Picasso successfully loaded poster for movie: " + movie);
                         }
 
                         @Override
@@ -157,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public List<Movie> loadInBackground() {
             OkHttpClient client = new OkHttpClient();
-            String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key="+API_KEY;
+            String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
             Request request = new Request.Builder()
                     .url(url)
                     .get()
@@ -165,9 +151,17 @@ public class MainActivity extends AppCompatActivity implements
 
             try {
                 Response response = client.newCall(request).execute();
-                Log.d(TAG, "loadInBackground: "+response.body().string());
+                String json = response.body().string();
+                Log.d(TAG, "loadInBackground: " + json);
+
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+                Gson gson = gsonBuilder.create();
+                MovieResponse movieResponse = gson.fromJson(json, MovieResponse.class);
+                Log.d(TAG, "parsed response: " + movieResponse);
+                return movieResponse.getResults();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Failed to parse movies json response: ", e );
             }
             return null;
         }
