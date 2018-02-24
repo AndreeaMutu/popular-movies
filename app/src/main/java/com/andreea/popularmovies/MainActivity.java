@@ -10,21 +10,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.andreea.popularmovies.model.Movie;
-import com.andreea.popularmovies.model.MovieResponse;
 import com.andreea.popularmovies.utils.JsonUtils;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -50,6 +48,28 @@ public class MainActivity extends AppCompatActivity implements
 
         // init loader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == R.id.sort_popular) {
+            item.setChecked(true);
+            Toast.makeText(this, "click most popular", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (selectedItemId ==R.id.sort_rating){
+            item.setChecked(true);
+            Toast.makeText(this, "click top rated", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
