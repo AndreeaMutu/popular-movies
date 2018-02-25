@@ -1,6 +1,7 @@
 package com.andreea.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -9,17 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.JsonUtils;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +24,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Movie>> {
+        LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int COLUMNS = 2;
     private static final int MOVIES_LOADER_ID = 77;
@@ -70,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, moviesQuery, this);
             return true;
         }
-        if (selectedItemId ==R.id.sort_rating){
+        if (selectedItemId == R.id.sort_rating) {
             item.setChecked(true);
             String url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=" + API_KEY;
             Bundle moviesQuery = new Bundle();
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
         Log.d(TAG, "onLoadFinished: " + data);
-        MoviesAdapter adapter = new MoviesAdapter(this, data);
+        MoviesAdapter adapter = new MoviesAdapter(this, data, this);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -99,58 +94,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private static class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterViewHolder> {
-        private Context context;
-        private List<Movie> movieList;
-
-        public class PosterViewHolder extends RecyclerView.ViewHolder {
-            public ImageView posterImageView;
-
-            public PosterViewHolder(View view) {
-                super(view);
-                posterImageView = (ImageView) view.findViewById(R.id.movie_poster_iv);
-            }
-        }
-
-        public MoviesAdapter(Context context, List<Movie> movieList) {
-            this.context = context;
-            this.movieList = movieList;
-        }
-
-        @Override
-        public PosterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.movie_item, parent, false);
-
-            return new PosterViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final PosterViewHolder holder, int position) {
-            final Movie movie = movieList.get(position);
-            String baseUrl = "http://image.tmdb.org/t/p/w185/";
-            String moviePosterUrl = baseUrl + movie.getPosterPath();
-            Picasso.with(context)
-                    .load(moviePosterUrl)
-                    .placeholder(android.R.drawable.progress_horizontal)
-                    .error(android.R.drawable.stat_notify_error)
-                    .into(holder.posterImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(TAG, "Picasso successfully loaded poster for movie: " + movie);
-                        }
-
-                        @Override
-                        public void onError() {
-                            Log.e(TAG, "Picasso failed to load poster for movie: " + movie);
-                        }
-                    });
-        }
-
-        @Override
-        public int getItemCount() {
-            return movieList.size();
-        }
+    @Override
+    public void onClick(Movie movie) {
+        Intent detailsActivityIntent = new Intent(this, DetailsActivity.class);
+        detailsActivityIntent.putExtra(Intent.EXTRA_TEXT, movie.toString());
+        startActivity(detailsActivityIntent);
     }
 
     private static class MoviesAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
@@ -188,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 return JsonUtils.parseMoviesResponse(json);
             } catch (IOException e) {
-                Log.e(TAG, "Failed to parse movies json response: ", e );
+                Log.e(TAG, "Failed to parse movies json response: ", e);
             }
             return null;
         }
