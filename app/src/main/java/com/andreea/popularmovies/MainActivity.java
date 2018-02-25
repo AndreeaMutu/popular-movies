@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.JsonUtils;
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int COLUMNS = 2;
     private static final int MOVIES_LOADER_ID = 77;
+    private static final String MOVIES_URL = "movies-url";
     private RecyclerView recyclerView;
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(mLayoutManager);
 
         // init loader
-        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, this);
+        String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
+        Bundle moviesQuery = new Bundle();
+        moviesQuery.putString(MOVIES_URL, url);
+        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, moviesQuery, this);
     }
 
     @Override
@@ -61,12 +64,18 @@ public class MainActivity extends AppCompatActivity implements
         int selectedItemId = item.getItemId();
         if (selectedItemId == R.id.sort_popular) {
             item.setChecked(true);
-            Toast.makeText(this, "click most popular", Toast.LENGTH_SHORT).show();
+            String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
+            Bundle moviesQuery = new Bundle();
+            moviesQuery.putString(MOVIES_URL, url);
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, moviesQuery, this);
             return true;
         }
         if (selectedItemId ==R.id.sort_rating){
             item.setChecked(true);
-            Toast.makeText(this, "click top rated", Toast.LENGTH_SHORT).show();
+            String url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=" + API_KEY;
+            Bundle moviesQuery = new Bundle();
+            moviesQuery.putString(MOVIES_URL, url);
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, moviesQuery, this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -74,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MoviesAsyncTaskLoader(this);
+        return new MoviesAsyncTaskLoader(this, args);
     }
 
     @Override
@@ -123,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements
             String moviePosterUrl = baseUrl + movie.getPosterPath();
             Picasso.with(context)
                     .load(moviePosterUrl)
-                    .placeholder(android.R.drawable.progress_indeterminate_horizontal)
+                    .placeholder(android.R.drawable.progress_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(holder.posterImageView, new Callback() {
                         @Override
@@ -146,9 +155,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private static class MoviesAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
         private List<Movie> movies;
+        private Bundle args;
 
-        public MoviesAsyncTaskLoader(Context context) {
+        public MoviesAsyncTaskLoader(Context context, Bundle args) {
             super(context);
+            this.args = args;
             if (movies != null) {
                 deliverResult(movies);
             } else {
@@ -164,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public List<Movie> loadInBackground() {
             OkHttpClient client = new OkHttpClient();
-            String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
+            String url = args.getString(MOVIES_URL);
             Request request = new Request.Builder()
                     .url(url)
                     .get()
