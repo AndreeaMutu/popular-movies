@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.andreea.popularmovies.model.Movie;
+
 public class DetailsActivity extends AppCompatActivity {
 
     @Override
@@ -14,9 +16,9 @@ public class DetailsActivity extends AppCompatActivity {
         Intent moviesIntent = getIntent();
 
         if (moviesIntent != null) {
-            if (moviesIntent.hasExtra(Intent.EXTRA_TEXT)) {
-                String movieToString = moviesIntent.getStringExtra(Intent.EXTRA_TEXT);
-                Toast.makeText(this,movieToString,Toast.LENGTH_LONG).show();
+            if (moviesIntent.hasExtra("Movie")) {
+                Movie movie = moviesIntent.getParcelableExtra("Movie");
+                Toast.makeText(this, movie.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }

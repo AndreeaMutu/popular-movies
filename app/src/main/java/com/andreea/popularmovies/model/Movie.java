@@ -1,6 +1,9 @@
 package com.andreea.popularmovies.model;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable{
     private long id;
     private String title;
     private String posterPath;
@@ -9,6 +12,15 @@ public class Movie {
     private String releaseDate;
 
     public Movie() {
+    }
+
+    public Movie(Parcel in) {
+        this.id = in.readLong();
+        this.title = in.readString();
+        this.posterPath = in.readString();
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+        this.voteAverage = in.readDouble();
     }
 
     public long getId() {
@@ -73,5 +85,29 @@ public class Movie {
                 ", voteAverage=" + voteAverage +
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
+    }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(posterPath);
+        dest.writeString(overview);
+        dest.writeString(releaseDate);
+        dest.writeDouble(voteAverage);
     }
 }
