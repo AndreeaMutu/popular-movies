@@ -57,7 +57,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterView
         String baseUrl = "http://image.tmdb.org/t/p/w185/";
         String moviePosterUrl = baseUrl + movie.getPosterPath();
         Picasso.with(context)
-                .load(R.drawable.zoo)
+                .load(moviePosterUrl)
                 .placeholder(android.R.drawable.progress_horizontal)
                 .error(android.R.drawable.stat_notify_error)
                 .into(holder.posterImageView, new Callback() {
