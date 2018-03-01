@@ -12,23 +12,31 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.JsonUtils;
+import com.andreea.popularmovies.utils.NetworkUtils;
+import com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.POPULAR;
+
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int COLUMNS = 2;
+
+    private static final int GRID_COLUMNS = 2;
     private static final int MOVIES_LOADER_ID = 77;
-    private static final String MOVIES_URL = "movies-url";
+    private static final String MOVIES_SORT_BY = "sortBy";
+    private Bundle sortOrderBundle = new Bundle();
     private RecyclerView recyclerView;
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -37,15 +45,20 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (!NetworkUtils.isConnectedToNetwork(this)) {
+            Toast.makeText(this, "No internet connection! Can not retrieve movies!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, COLUMNS);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, GRID_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        // init loader
-        String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
-        Bundle moviesQuery = new Bundle();
-        moviesQuery.putString(MOVIES_URL, url);
-        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, moviesQuery, this);
+        // Set default sort order to Popular Movies
+        sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.POPULAR.getValue());
+
+        // Init movie loader
+        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
     }
 
     @Override
@@ -59,18 +72,14 @@ public class MainActivity extends AppCompatActivity implements
         int selectedItemId = item.getItemId();
         if (selectedItemId == R.id.sort_popular) {
             item.setChecked(true);
-            String url = "https://api.themoviedb.org/3/movie/popular?page=1&language=en-US&api_key=" + API_KEY;
-            Bundle moviesQuery = new Bundle();
-            moviesQuery.putString(MOVIES_URL, url);
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, moviesQuery, this);
+            sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.POPULAR.getValue());
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
         if (selectedItemId == R.id.sort_rating) {
             item.setChecked(true);
-            String url = "https://api.themoviedb.org/3/movie/top_rated?page=1&language=en-US&api_key=" + API_KEY;
-            Bundle moviesQuery = new Bundle();
-            moviesQuery.putString(MOVIES_URL, url);
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, moviesQuery, this);
+            sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.TOP_RATED.getValue());
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -122,13 +131,14 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public List<Movie> loadInBackground() {
+            String sortOrder = args.getString(MOVIES_SORT_BY);
+            URL moviesUrl = NetworkUtils.buildMovieListUrl(sortOrder, API_KEY);
+
             OkHttpClient client = new OkHttpClient();
-            String url = args.getString(MOVIES_URL);
             Request request = new Request.Builder()
-                    .url(url)
+                    .url(moviesUrl)
                     .get()
                     .build();
-
             try {
                 Response response = client.newCall(request).execute();
                 String json = response.body().string();

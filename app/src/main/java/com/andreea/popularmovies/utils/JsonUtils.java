@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 public final class JsonUtils {
+    private JsonUtils() {
+    }
+
     public static List<Movie> parseMoviesResponse(String moviesResponseJson) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);

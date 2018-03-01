@@ -3,6 +3,7 @@
     package="com.andreea.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,9 +21,9 @@
         </activity>
         <activity
             android:name=".DetailsActivity"
+            android:label="Movie"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeNoActionBar"
-            android:label="Movie">
+            android:theme="@style/AppThemeNoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
