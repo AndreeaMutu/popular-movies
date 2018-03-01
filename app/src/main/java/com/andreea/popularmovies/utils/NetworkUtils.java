@@ -6,8 +6,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import com.andreea.popularmovies.BuildConfig;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -16,9 +14,12 @@ public final class NetworkUtils {
     private static final String PAGE_PARAM = "page";
     private static final String LANGUAGE_PARAM = "language";
     private static final String API_KEY_PARAM = "api_key";
-    private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
+
     private static final String DEFAULT_PAGE = "1";
     private static final String DEFAULT_LANGUAGE = "en_US";
+
+    private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
+    private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w185/";
 
     private NetworkUtils() {
     }
@@ -50,6 +51,10 @@ public final class NetworkUtils {
             Log.e(TAG, "Failed to build movie db URL:", e);
         }
         return url;
+    }
+
+    public static String buildPosterUrl(String posterPath) {
+        return BASE_POSTER_URL + posterPath;
     }
 
     public enum MovieSortOrder {

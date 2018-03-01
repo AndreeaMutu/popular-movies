@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.andreea.popularmovies.model.Movie;
+import com.andreea.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -54,8 +55,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterView
     @Override
     public void onBindViewHolder(final MoviesAdapter.PosterViewHolder holder, int position) {
         final Movie movie = movieList.get(position);
-        String baseUrl = "http://image.tmdb.org/t/p/w185/";
-        String moviePosterUrl = baseUrl + movie.getPosterPath();
+        String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
         Picasso.with(context)
                 .load(moviePosterUrl)
                 .placeholder(android.R.drawable.progress_horizontal)

@@ -10,15 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andreea.popularmovies.model.Movie;
+import com.andreea.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private static final String MOVIE_KEY = "Movie";
     private Movie movie;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private TextView titleTv;
+    private TextView plotSynopsisTextView;
+    private TextView releaseDateTextView;
+    private TextView voteAverageTextView;
+    private ImageView posterImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,27 +35,32 @@ public class DetailsActivity extends AppCompatActivity {
             movie = moviesIntent.getParcelableExtra(MOVIE_KEY);
         }
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        CollapsingToolbarLayout ctl = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        TextView titleTv = (TextView) findViewById(R.id.movie_title_tv);
-        TextView plotSynopsisTextView = (TextView) findViewById(R.id.plot_synopsis_tv);
-        TextView releaseDateTextView = (TextView) findViewById(R.id.release_date_tv);
-        TextView voteAverageTextView = (TextView) findViewById(R.id.vote_average_tv);
-        ImageView posterImageView = (ImageView) findViewById(R.id.movie_poster_iv);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        titleTv = (TextView) findViewById(R.id.movie_title_tv);
+        plotSynopsisTextView = (TextView) findViewById(R.id.plot_synopsis_tv);
+        releaseDateTextView = (TextView) findViewById(R.id.release_date_tv);
+        voteAverageTextView = (TextView) findViewById(R.id.vote_average_tv);
+        posterImageView = (ImageView) findViewById(R.id.movie_poster_iv);
 
+        displayMovieDetails(movie);
+    }
+
+    private void displayMovieDetails(final Movie movie) {
         if (movie != null) {
-            ctl.setTitle(movie.getTitle());
+            collapsingToolbarLayout.setTitle(movie.getTitle());
             titleTv.setText(movie.getTitle());
             plotSynopsisTextView.setText(movie.getOverview());
             releaseDateTextView.setText(movie.getReleaseDate());
-            voteAverageTextView.setText(movie.getVoteAverage()+"/10");
+            voteAverageTextView.setText(String.format("%s/10", movie.getVoteAverage()));
 
+            String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
             Picasso.with(this)
-                    .load(R.drawable.zoo)
+                    .load(moviePosterUrl)
                     .placeholder(android.R.drawable.progress_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(posterImageView, new Callback() {

@@ -22,7 +22,7 @@
                 android:id="@+id/movie_title_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:height="250dp"
+                android:height="200dp"
                 android:background="@color/colorPrimaryDark"
                 app:layout_collapseMode="parallax" />
 
@@ -67,7 +67,7 @@
                 <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_margin="8dp">
                     <TextView
