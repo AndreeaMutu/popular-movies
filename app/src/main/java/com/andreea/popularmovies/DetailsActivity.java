@@ -17,6 +17,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
+import static com.andreea.popularmovies.utils.TextFormatUtils.formatReleaseDate;
+import static com.andreea.popularmovies.utils.TextFormatUtils.formatVoteAverage;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -61,8 +63,8 @@ public class DetailsActivity extends AppCompatActivity {
             collapsingToolbarLayout.setTitle(movie.getTitle());
             titleTv.setText(movie.getTitle());
             plotSynopsisTextView.setText(movie.getOverview());
-            releaseDateTextView.setText(movie.getReleaseDate());
-            voteAverageTextView.setText(String.format("%s/10", movie.getVoteAverage()));
+            releaseDateTextView.setText(formatReleaseDate(movie.getReleaseDate()));
+            voteAverageTextView.setText(formatVoteAverage(movie.getVoteAverage()));
 
             String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
             Picasso.with(this)
