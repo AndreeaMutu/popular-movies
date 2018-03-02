@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.JsonUtils;
+import com.andreea.popularmovies.utils.MovieConstants;
 import com.andreea.popularmovies.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -29,7 +30,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_LOADER_ID;
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_SORT_BY_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_GRID_COLUMNS;
 import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.POPULAR;
 import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.TOP_RATED;
 
@@ -37,13 +41,9 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int GRID_COLUMNS = 2;
-    private static final int MOVIES_LOADER_ID = 77;
-    private static final String MOVIES_SORT_BY = "sortBy";
     private Bundle sortOrderBundle = new Bundle();
     private RecyclerView recyclerView;
     private View snackbarView;
-    private static final String API_KEY = BuildConfig.API_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         snackbarView = findViewById(android.R.id.content);
         recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, GRID_COLUMNS);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, MOVIE_GRID_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
 
         if (!NetworkUtils.isConnectedToNetwork(this)) {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         // Set default sort order to Popular Movies
-        sortOrderBundle.putString(MOVIES_SORT_BY, POPULAR.getValue());
+        sortOrderBundle.putString(MOVIES_SORT_BY_KEY, POPULAR.getValue());
 
         // Initialize movie loader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
@@ -85,13 +85,13 @@ public class MainActivity extends AppCompatActivity implements
         int selectedItemId = item.getItemId();
         if (selectedItemId == R.id.sort_popular) {
             item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY, POPULAR.getValue());
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, POPULAR.getValue());
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
         if (selectedItemId == R.id.sort_rating) {
             item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY, TOP_RATED.getValue());
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, TOP_RATED.getValue());
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
@@ -147,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public List<Movie> loadInBackground() {
-            String sortOrder = args.getString(MOVIES_SORT_BY);
-            URL moviesUrl = NetworkUtils.buildMovieListUrl(sortOrder, API_KEY);
+            String sortOrder = args.getString(MOVIES_SORT_BY_KEY);
+            URL moviesUrl = NetworkUtils.buildMovieListUrl(sortOrder, MovieConstants.API_KEY);
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
