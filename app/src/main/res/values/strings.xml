@@ -3,5 +3,9 @@
 
     <string name="no_internet_message">No internet connection! Can not retrieve movies!</string>
     <string name="no_details_message">Failed to get movie details!</string>
+    <string name="menu_sort_by">Sort by</string>
+    <string name="menu_most_popular">Most Popular</string>
+    <string name="menu_highest_rating">Highest Rating</string>
+    <string name="movie_poster_description">Movie poster</string>
 
 </resources>

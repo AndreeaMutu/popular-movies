@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> data) {
         Log.d(TAG, "onLoadFinished: " + data);
+        if (data == null || data.isEmpty()) {
+            return;
+        }
         MoviesAdapter adapter = new MoviesAdapter(this, data, this);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
