@@ -14,7 +14,7 @@ public class Movie implements Parcelable{
     public Movie() {
     }
 
-    public Movie(Parcel in) {
+    private Movie(Parcel in) {
         this.id = in.readLong();
         this.title = in.readString();
         this.posterPath = in.readString();

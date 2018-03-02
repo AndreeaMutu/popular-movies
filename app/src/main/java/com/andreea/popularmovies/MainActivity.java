@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private Bundle sortOrderBundle = new Bundle();
+    private final Bundle sortOrderBundle = new Bundle();
     private RecyclerView recyclerView;
     private View snackbarView;
 
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static class MoviesAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
         private List<Movie> movies;
-        private Bundle args;
+        private final Bundle args;
 
         public MoviesAsyncTaskLoader(Context context, Bundle args) {
             super(context);
@@ -141,11 +141,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected void onStartLoading() {
-            super.onStartLoading();
-        }
-
-        @Override
         public List<Movie> loadInBackground() {
             String sortOrder = args.getString(MOVIES_SORT_BY_KEY);
             URL moviesUrl = NetworkUtils.buildMovieListUrl(sortOrder, MovieConstants.API_KEY);
@@ -155,14 +150,19 @@ public class MainActivity extends AppCompatActivity implements
                     .url(moviesUrl)
                     .get()
                     .build();
-            try (Response response = client.newCall(request).execute()) {
-                ResponseBody body = response.body();
-                if (response.isSuccessful() && body != null) {
-                    String json = body.string();
-                    Log.d(TAG, "loadInBackground: " + json);
-                    return JsonUtils.parseMoviesResponse(json);
-                } else {
-                    Log.e(TAG, String.format("loadInBackground: Movies request to %s was not successful.", moviesUrl));
+            try {
+                Response response = client.newCall(request).execute();
+                try {
+                    ResponseBody body = response.body();
+                    if (response.isSuccessful() && body != null) {
+                        String json = body.string();
+                        Log.d(TAG, "loadInBackground: " + json);
+                        return JsonUtils.parseMoviesResponse(json);
+                    } else {
+                        Log.e(TAG, String.format("loadInBackground: Movies request to %s was not successful.", moviesUrl));
+                    }
+                } finally {
+                    response.close();
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to parse movies json response: ", e);

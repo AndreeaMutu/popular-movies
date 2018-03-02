@@ -22,7 +22,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterView
     private final MoviesAdapter.MovieOnClickHandler onClickHandler;
 
     public class PosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ImageView posterImageView;
+        public final ImageView posterImageView;
 
         public PosterViewHolder(View view) {
             super(view);

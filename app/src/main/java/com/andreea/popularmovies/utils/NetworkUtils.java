@@ -60,7 +60,7 @@ public final class NetworkUtils {
     public enum MovieSortOrder {
         POPULAR("popular"),
         TOP_RATED("top_rated");
-        private String value;
+        private final String value;
 
         MovieSortOrder(String value) {
             this.value = value;
