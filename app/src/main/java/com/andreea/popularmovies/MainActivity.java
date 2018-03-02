@@ -3,6 +3,7 @@ package com.andreea.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -12,22 +13,25 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.JsonUtils;
 import com.andreea.popularmovies.utils.NetworkUtils;
-import com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
 import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.POPULAR;
+import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.TOP_RATED;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
@@ -38,27 +42,32 @@ public class MainActivity extends AppCompatActivity implements
     private static final String MOVIES_SORT_BY = "sortBy";
     private Bundle sortOrderBundle = new Bundle();
     private RecyclerView recyclerView;
+    private View snackbarView;
     private static final String API_KEY = BuildConfig.API_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (!NetworkUtils.isConnectedToNetwork(this)) {
-            Toast.makeText(this, "No internet connection! Can not retrieve movies!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
+        snackbarView = findViewById(android.R.id.content);
         recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, GRID_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        // Set default sort order to Popular Movies
-        sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.POPULAR.getValue());
+        if (!NetworkUtils.isConnectedToNetwork(this)) {
+            displayNoInternetMessage();
+            return;
+        }
 
-        // Init movie loader
+        // Set default sort order to Popular Movies
+        sortOrderBundle.putString(MOVIES_SORT_BY, POPULAR.getValue());
+
+        // Initialize movie loader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
+    }
+
+    private void displayNoInternetMessage() {
+        Snackbar.make(snackbarView, getString(R.string.no_internet_message), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -69,16 +78,20 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (!NetworkUtils.isConnectedToNetwork(this)) {
+            displayNoInternetMessage();
+            return super.onOptionsItemSelected(item);
+        }
         int selectedItemId = item.getItemId();
         if (selectedItemId == R.id.sort_popular) {
             item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.POPULAR.getValue());
+            sortOrderBundle.putString(MOVIES_SORT_BY, POPULAR.getValue());
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
         if (selectedItemId == R.id.sort_rating) {
             item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY, MovieSortOrder.TOP_RATED.getValue());
+            sortOrderBundle.putString(MOVIES_SORT_BY, TOP_RATED.getValue());
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }
@@ -106,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(Movie movie) {
         Intent detailsActivityIntent = new Intent(this, DetailsActivity.class);
-        detailsActivityIntent.putExtra("Movie", movie);
+        detailsActivityIntent.putExtra(MOVIE_DETAILS_KEY, movie);
         startActivity(detailsActivityIntent);
     }
 
@@ -139,16 +152,19 @@ public class MainActivity extends AppCompatActivity implements
                     .url(moviesUrl)
                     .get()
                     .build();
-            try {
-                Response response = client.newCall(request).execute();
-                String json = response.body().string();
-                Log.d(TAG, "loadInBackground: " + json);
-
-                return JsonUtils.parseMoviesResponse(json);
+            try (Response response = client.newCall(request).execute()) {
+                ResponseBody body = response.body();
+                if (response.isSuccessful() && body != null) {
+                    String json = body.string();
+                    Log.d(TAG, "loadInBackground: " + json);
+                    return JsonUtils.parseMoviesResponse(json);
+                } else {
+                    Log.e(TAG, String.format("loadInBackground: Movies request to %s was not successful.", moviesUrl));
+                }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to parse movies json response: ", e);
             }
-            return null;
+            return Collections.emptyList();
         }
 
         @Override

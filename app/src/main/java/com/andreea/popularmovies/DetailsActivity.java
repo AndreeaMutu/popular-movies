@@ -3,20 +3,23 @@ package com.andreea.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
+
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
-    private static final String MOVIE_KEY = "Movie";
     private Movie movie;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private TextView titleTv;
@@ -31,14 +34,17 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         Intent moviesIntent = getIntent();
 
-        if (moviesIntent != null && moviesIntent.hasExtra(MOVIE_KEY)) {
-            movie = moviesIntent.getParcelableExtra(MOVIE_KEY);
+        if (moviesIntent != null && moviesIntent.hasExtra(MOVIE_DETAILS_KEY)) {
+            movie = moviesIntent.getParcelableExtra(MOVIE_DETAILS_KEY);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setHomeButtonEnabled(true);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         titleTv = (TextView) findViewById(R.id.movie_title_tv);
@@ -74,6 +80,8 @@ public class DetailsActivity extends AppCompatActivity {
                             Log.e(TAG, "Picasso failed to load poster for movie: " + movie);
                         }
                     });
+        } else {
+            Toast.makeText(this, getString(R.string.no_details_message), Toast.LENGTH_LONG).show();
         }
     }
 }
