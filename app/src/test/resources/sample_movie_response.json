@@ -1,0 +1,50 @@
+{
+  "page": 1,
+  "total_results": 19739,
+  "total_pages": 987,
+  "results": [
+    {
+      "vote_count": 4352,
+      "id": 284053,
+      "video": false,
+      "vote_average": 7.4,
+      "title": "Thor: Ragnarok",
+      "popularity": 444.940759,
+      "poster_path": "/oSLd5GYGsiGgzDPKTwQh7wamO8t.jpg",
+      "original_language": "en",
+      "original_title": "Thor: Ragnarok",
+      "genre_ids": [
+        878,
+        28,
+        12,
+        35,
+        14
+      ],
+      "backdrop_path": "/kaIfm5ryEOwYg8mLbq8HkPuM1Fo.jpg",
+      "adult": false,
+      "overview": "Thor is imprisoned on the other side of the universe and finds himself in a race against time to get back to Asgard to stop Ragnarok, the prophecy of destruction to his homeworld and the end of Asgardian civilization, at the hands of an all-powerful new threat, the ruthless Hela.",
+      "release_date": "2017-10-25"
+    },
+    {
+      "vote_count": 6261,
+      "id": 269149,
+      "video": false,
+      "vote_average": 7.7,
+      "title": "Zootopia",
+      "popularity": 325.81792,
+      "poster_path": "/sM33SANp9z6rXW8Itn7NnG1GOEs.jpg",
+      "original_language": "en",
+      "original_title": "Zootopia",
+      "genre_ids": [
+        16,
+        12,
+        10751,
+        35
+      ],
+      "backdrop_path": "/mhdeE1yShHTaDbJVdWyTlzFvNkr.jpg",
+      "adult": false,
+      "overview": "Determined to prove herself, Officer Judy Hopps, the first bunny on Zootopia's police force, jumps at the chance to crack her first case - even if it means partnering with scam-artist fox Nick Wilde to solve the mystery.",
+      "release_date": "2016-02-11"
+    }
+  ]
+}

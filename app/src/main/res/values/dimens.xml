@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_nested_scroll_view">4dp</dimen>
+    <dimen name="details_layout_margin">8dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="expanded_toolbar_height">200dp</dimen>
+</resources>
