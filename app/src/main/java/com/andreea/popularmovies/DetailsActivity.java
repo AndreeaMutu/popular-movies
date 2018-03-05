@@ -16,6 +16,9 @@ import com.andreea.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatReleaseDate;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatVoteAverage;
@@ -23,17 +26,26 @@ import static com.andreea.popularmovies.utils.TextFormatUtils.formatVoteAverage;
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private Movie movie;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private TextView titleTv;
-    private TextView plotSynopsisTextView;
-    private TextView releaseDateTextView;
-    private TextView voteAverageTextView;
-    private ImageView posterImageView;
+
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.movie_title_tv)
+    TextView titleTv;
+    @BindView(R.id.plot_synopsis_tv)
+    TextView plotSynopsisTextView;
+    @BindView(R.id.release_date_tv)
+    TextView releaseDateTextView;
+    @BindView(R.id.vote_average_tv)
+    TextView voteAverageTextView;
+    @BindView(R.id.movie_poster_iv)
+    ImageView posterImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        ButterKnife.bind(this);
+
         Intent moviesIntent = getIntent();
 
         if (moviesIntent != null && moviesIntent.hasExtra(MOVIE_DETAILS_KEY)) {
@@ -47,13 +59,6 @@ public class DetailsActivity extends AppCompatActivity {
             supportActionBar.setHomeButtonEnabled(true);
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        titleTv = (TextView) findViewById(R.id.movie_title_tv);
-        plotSynopsisTextView = (TextView) findViewById(R.id.plot_synopsis_tv);
-        releaseDateTextView = (TextView) findViewById(R.id.release_date_tv);
-        voteAverageTextView = (TextView) findViewById(R.id.vote_average_tv);
-        posterImageView = (ImageView) findViewById(R.id.movie_poster_iv);
 
         displayMovieDetails(movie);
     }
