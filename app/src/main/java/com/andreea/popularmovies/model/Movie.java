@@ -3,13 +3,14 @@ package com.andreea.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable {
     private long id;
     private String title;
     private String posterPath;
     private String overview;
     private double voteAverage;
     private String releaseDate;
+    private boolean isFavorite;
 
     public Movie() {
     }
@@ -21,6 +22,7 @@ public class Movie implements Parcelable{
         this.overview = in.readString();
         this.releaseDate = in.readString();
         this.voteAverage = in.readDouble();
+        this.isFavorite = in.readInt() != 0;
     }
 
     public long getId() {
@@ -29,10 +31,6 @@ public class Movie implements Parcelable{
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Movie(String posterPath) {
-        this.posterPath = posterPath;
     }
 
     public String getTitle() {
@@ -75,6 +73,14 @@ public class Movie implements Parcelable{
         this.releaseDate = releaseDate;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -86,6 +92,7 @@ public class Movie implements Parcelable{
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
     }
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
@@ -109,5 +116,6 @@ public class Movie implements Parcelable{
         dest.writeString(overview);
         dest.writeString(releaseDate);
         dest.writeDouble(voteAverage);
+        dest.writeInt(isFavorite ? 1 : 0);
     }
 }

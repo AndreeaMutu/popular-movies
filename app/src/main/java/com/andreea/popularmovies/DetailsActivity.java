@@ -1,16 +1,21 @@
 package com.andreea.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andreea.popularmovies.data.MovieContract.FavoriteMovie;
 import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.utils.NetworkUtils;
 import com.squareup.picasso.Callback;
@@ -39,6 +44,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView voteAverageTextView;
     @BindView(R.id.movie_poster_iv)
     ImageView posterImageView;
+    @BindView(R.id.favorite_fab)
+    FloatingActionButton favoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,37 @@ public class DetailsActivity extends AppCompatActivity {
                     });
         } else {
             Toast.makeText(this, getString(R.string.no_details_message), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onClickAddFavorite(View view) {
+        if (movie.isFavorite()) {
+            // Remove from favorites
+            long id = movie.getId();
+            String stringId = Long.toString(id);
+            Uri uri = FavoriteMovie.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(stringId).build();
+            int deletedRows = getContentResolver().delete(uri, null, null);
+            if (deletedRows != 0) {
+                Log.i(TAG, "onClickAddFavorite: Removed favorite movie " + uri);
+                // Set movie favorite to false
+                movie.setFavorite(false);
+                // Set star icon off
+                favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+            }
+        } else {
+            // Add to favorites
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(FavoriteMovie.COLUMN_TITLE, movie.getTitle());
+            contentValues.put(FavoriteMovie.COLUMN_MOVIE_ID, movie.getId());
+            Uri uri = getContentResolver().insert(FavoriteMovie.CONTENT_URI, contentValues);
+            if (uri != null) {
+                Log.i(TAG, "onClickAddFavorite: Added favorite movie " + uri);
+                // Set movie favorite to true
+                movie.setFavorite(true);
+                // Set star icon on
+                favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+            }
         }
     }
 }
