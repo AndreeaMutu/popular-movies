@@ -77,6 +77,7 @@ public class DetailsActivity extends AppCompatActivity {
             plotSynopsisTextView.setText(movie.getOverview());
             releaseDateTextView.setText(formatReleaseDate(movie.getReleaseDate()));
             voteAverageTextView.setText(formatVoteAverage(movie.getVoteAverage()));
+            toggleStarForFavorite(movie);
 
             String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
             Picasso.with(this)
@@ -108,25 +109,37 @@ public class DetailsActivity extends AppCompatActivity {
             uri = uri.buildUpon().appendPath(stringId).build();
             int deletedRows = getContentResolver().delete(uri, null, null);
             if (deletedRows != 0) {
-                Log.i(TAG, "onClickAddFavorite: Removed favorite movie " + uri);
+                Log.i(TAG, "Removed favorite movie " + uri);
                 // Set movie favorite to false
                 movie.setFavorite(false);
-                // Set star icon off
-                favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+                toggleStarForFavorite(movie);
             }
         } else {
             // Add to favorites
             ContentValues contentValues = new ContentValues();
             contentValues.put(FavoriteMovie.COLUMN_TITLE, movie.getTitle());
             contentValues.put(FavoriteMovie.COLUMN_MOVIE_ID, movie.getId());
+            contentValues.put(FavoriteMovie.COLUMN_OVERVIEW, movie.getOverview());
+            contentValues.put(FavoriteMovie.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+            contentValues.put(FavoriteMovie.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
+            contentValues.put(FavoriteMovie.COLUMN_POSTER_PATH, movie.getPosterPath());
             Uri uri = getContentResolver().insert(FavoriteMovie.CONTENT_URI, contentValues);
             if (uri != null) {
-                Log.i(TAG, "onClickAddFavorite: Added favorite movie " + uri);
+                Log.i(TAG, "Added favorite movie " + uri);
                 // Set movie favorite to true
                 movie.setFavorite(true);
-                // Set star icon on
-                favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+                toggleStarForFavorite(movie);
             }
+        }
+    }
+
+    private void toggleStarForFavorite(Movie movie) {
+        if (movie.isFavorite()) {
+            // Set star icon on
+            favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+        } else {
+            // Set star icon off
+            favoriteButton.setImageDrawable(getResources().getDrawable(android.R.drawable.btn_star_big_off));
         }
     }
 }

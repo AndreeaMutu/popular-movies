@@ -22,8 +22,9 @@ import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_LOADER_ID;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_SORT_BY_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_GRID_COLUMNS;
-import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.POPULAR;
-import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.TOP_RATED;
+import static com.andreea.popularmovies.utils.MovieSortOrder.FAVORITE;
+import static com.andreea.popularmovies.utils.MovieSortOrder.POPULAR;
+import static com.andreea.popularmovies.utils.MovieSortOrder.TOP_RATED;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>, MoviesAdapter.MovieOnClickHandler {
@@ -80,6 +81,12 @@ public class MainActivity extends AppCompatActivity implements
         if (selectedItemId == R.id.sort_rating) {
             item.setChecked(true);
             sortOrderBundle.putString(MOVIES_SORT_BY_KEY, TOP_RATED.getValue());
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
+            return true;
+        }
+        if (selectedItemId == R.id.sort_favorites) {
+            item.setChecked(true);
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, FAVORITE.getValue());
             getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
             return true;
         }

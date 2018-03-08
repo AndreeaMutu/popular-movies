@@ -56,18 +56,4 @@ public final class NetworkUtils {
     public static String buildPosterUrl(String posterPath) {
         return BASE_POSTER_URL + posterPath;
     }
-
-    public enum MovieSortOrder {
-        POPULAR("popular"),
-        TOP_RATED("top_rated");
-        private final String value;
-
-        MovieSortOrder(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
 }
