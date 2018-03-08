@@ -26,10 +26,13 @@ import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_ID_KEY;
 
 
 public class ReviewsLoaderCallbacks implements LoaderManager.LoaderCallbacks<List<Review>> {
+    private static final String TAG = ReviewsLoaderCallbacks.class.getSimpleName();
     private final Context context;
+    private final ReviewsAdapter reviewsAdapter;
 
-    public ReviewsLoaderCallbacks(Context context) {
+    public ReviewsLoaderCallbacks(Context context, ReviewsAdapter reviewsAdapter) {
         this.context = context;
+        this.reviewsAdapter = reviewsAdapter;
     }
 
     @Override
@@ -39,7 +42,8 @@ public class ReviewsLoaderCallbacks implements LoaderManager.LoaderCallbacks<Lis
 
     @Override
     public void onLoadFinished(Loader<List<Review>> loader, List<Review> data) {
-        // adapter set list
+        Log.d(TAG, "onLoadFinished: " + data);
+        reviewsAdapter.refreshReviews(data);
     }
 
     @Override

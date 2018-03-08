@@ -8,6 +8,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -25,15 +27,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
+import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_ID_KEY;
+import static com.andreea.popularmovies.utils.MovieConstants.REVIEWS_LOADER_ID;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatReleaseDate;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatVoteAverage;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
+    private final Bundle movieIdBundle = new Bundle();
     private Movie movie;
 
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.movie_title_tv)
     TextView titleTv;
     @BindView(R.id.plot_synopsis_tv)
@@ -46,6 +53,8 @@ public class DetailsActivity extends AppCompatActivity {
     ImageView posterImageView;
     @BindView(R.id.favorite_fab)
     FloatingActionButton favoriteButton;
+    @BindView(R.id.reviews_list)
+    RecyclerView reviewsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +68,6 @@ public class DetailsActivity extends AppCompatActivity {
             movie = moviesIntent.getParcelableExtra(MOVIE_DETAILS_KEY);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -68,6 +76,14 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         displayMovieDetails(movie);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        reviewsList.setLayoutManager(layoutManager);
+        ReviewsAdapter reviewsAdapter = new ReviewsAdapter();
+        reviewsList.setAdapter(reviewsAdapter);
+
+        movieIdBundle.putLong(MOVIE_ID_KEY, movie.getId());
+        getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new ReviewsLoaderCallbacks(this, reviewsAdapter));
     }
 
     private void displayMovieDetails(final Movie movie) {
