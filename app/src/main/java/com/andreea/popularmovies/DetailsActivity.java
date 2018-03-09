@@ -79,9 +79,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         displayMovieDetails(movie);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        reviewsList.setLayoutManager(layoutManager);
-        trailersList.setLayoutManager(layoutManager);
+        reviewsList.setLayoutManager(new LinearLayoutManager(this));
+        trailersList.setLayoutManager(new LinearLayoutManager(this));
 
         ReviewsAdapter reviewsAdapter = new ReviewsAdapter();
         reviewsList.setAdapter(reviewsAdapter);
