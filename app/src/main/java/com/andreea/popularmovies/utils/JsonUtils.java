@@ -5,6 +5,8 @@ import com.andreea.popularmovies.model.Movie;
 import com.andreea.popularmovies.model.MovieResponse;
 import com.andreea.popularmovies.model.Review;
 import com.andreea.popularmovies.model.ReviewResponse;
+import com.andreea.popularmovies.model.Video;
+import com.andreea.popularmovies.model.VideoResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -30,6 +32,15 @@ public final class JsonUtils {
         ReviewResponse reviewResponse = gson.fromJson(reviewsResponseJson, ReviewResponse.class);
         if (reviewResponse != null) {
             return reviewResponse.getResults();
+        }
+        return Collections.emptyList();
+    }
+
+    public static List<Video> parseVideosResponse(String videosResponseJson) {
+        Gson gson = initGson();
+        VideoResponse videoResponse = gson.fromJson(videosResponseJson, VideoResponse.class);
+        if (videoResponse != null) {
+            return videoResponse.getResults();
         }
         return Collections.emptyList();
     }

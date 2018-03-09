@@ -55,6 +55,8 @@ public class DetailsActivity extends AppCompatActivity {
     FloatingActionButton favoriteButton;
     @BindView(R.id.reviews_list)
     RecyclerView reviewsList;
+    @BindView(R.id.trailers_list)
+    RecyclerView trailersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +81,17 @@ public class DetailsActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         reviewsList.setLayoutManager(layoutManager);
+        trailersList.setLayoutManager(layoutManager);
+
         ReviewsAdapter reviewsAdapter = new ReviewsAdapter();
         reviewsList.setAdapter(reviewsAdapter);
 
+        VideosAdapter videosAdapter = new VideosAdapter();
+        trailersList.setAdapter(videosAdapter);
+
         movieIdBundle.putLong(MOVIE_ID_KEY, movie.getId());
         getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new ReviewsLoaderCallbacks(this, reviewsAdapter));
+        getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new TrailersLoaderCallbacks(this, videosAdapter));
     }
 
     private void displayMovieDetails(final Movie movie) {

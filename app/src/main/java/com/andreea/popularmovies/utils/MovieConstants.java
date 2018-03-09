@@ -11,6 +11,7 @@ public class MovieConstants {
 
     public static final int MOVIES_LOADER_ID = 77;
     public static final int REVIEWS_LOADER_ID = 52;
+    public static final int VIDEOS_LOADER_ID = 39;
     public static final int MOVIE_GRID_COLUMNS = 2;
 
     private MovieConstants() {
