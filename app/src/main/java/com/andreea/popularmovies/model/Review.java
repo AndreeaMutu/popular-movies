@@ -4,6 +4,7 @@ package com.andreea.popularmovies.model;
 public class Review {
     private String author;
     private String content;
+    private String url;
 
     public Review() {
     }
@@ -22,5 +23,13 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

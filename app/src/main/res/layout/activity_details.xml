@@ -81,11 +81,13 @@
 
                     <TextView
                         android:id="@+id/release_date_tv"
+                        style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/vote_average_tv"
+                        style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -93,6 +95,7 @@
 
             <TextView
                 android:id="@+id/plot_synopsis_tv"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/details_layout_margin" />
