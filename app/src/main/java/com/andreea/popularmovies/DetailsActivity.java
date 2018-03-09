@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_ID_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.REVIEWS_LOADER_ID;
+import static com.andreea.popularmovies.utils.MovieConstants.VIDEOS_LOADER_ID;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatReleaseDate;
 import static com.andreea.popularmovies.utils.TextFormatUtils.formatVoteAverage;
 
@@ -90,7 +91,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         movieIdBundle.putLong(MOVIE_ID_KEY, movie.getId());
         getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new ReviewsLoaderCallbacks(this, reviewsAdapter));
-        getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new TrailersLoaderCallbacks(this, videosAdapter));
+        getSupportLoaderManager().initLoader(VIDEOS_LOADER_ID, movieIdBundle, new TrailersLoaderCallbacks(this, videosAdapter));
     }
 
     private void displayMovieDetails(final Movie movie) {
