@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sort_by) {
+            return super.onOptionsItemSelected(item);
+        }
         this.sortOptionId = item.getItemId();
         item.setChecked(true);
         loadMovies();
