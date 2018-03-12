@@ -10,7 +10,7 @@
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="start" />
 
     <TextView
         android:id="@+id/review_content_tv"

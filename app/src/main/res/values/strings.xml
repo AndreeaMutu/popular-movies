@@ -8,5 +8,8 @@
     <string name="menu_highest_rating">Highest Rating</string>
     <string name="menu_favorites">Favorites</string>
     <string name="movie_poster_description">Movie poster</string>
+    <string name="trailers_title">Trailers:</string>
+    <string name="reviews_title">Reviews:</string>
+    <string name="trailer_button_description">Play trailer</string>
 
 </resources>

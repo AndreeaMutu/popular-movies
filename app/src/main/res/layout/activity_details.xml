@@ -100,25 +100,44 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/details_layout_margin" />
 
-            <LinearLayout
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/trailers_title_tv"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:text="@string/trailers_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="@dimen/details_layout_margin" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/trailers_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/details_layout_margin"
-                    android:layout_weight="1" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailers_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/reviews_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/details_layout_margin"
-                    android:layout_weight="1" />
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/reviews_title_tv"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:text="@string/reviews_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

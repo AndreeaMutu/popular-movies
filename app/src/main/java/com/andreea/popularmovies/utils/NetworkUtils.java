@@ -23,6 +23,7 @@ public final class NetworkUtils {
 
     private static final String REVIEWS_PATH = "reviews";
     private static final String VIDEOS_PATH = "videos";
+    public static final String BASE_YOUTUBE_URI = "http://www.youtube.com";
 
     private NetworkUtils() {
     }
@@ -93,5 +94,13 @@ public final class NetworkUtils {
             Log.e(TAG, "Failed to build movie db videos URL:", e);
         }
         return url;
+    }
+
+    public static Uri buildYoutubeUri(String videoKey){
+        return Uri.parse(BASE_YOUTUBE_URI).buildUpon()
+                .appendPath("watch")
+                .appendQueryParameter("v", videoKey)
+                .build();
+
     }
 }
