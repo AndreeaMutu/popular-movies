@@ -77,8 +77,7 @@ public class TrailersLoaderCallbacks implements LoaderManager.LoaderCallbacks<Li
                     .get()
                     .build();
             try {
-                Response response = client.newCall(request).execute();
-                try {
+                try (Response response = client.newCall(request).execute()) {
                     ResponseBody body = response.body();
                     if (response.isSuccessful() && body != null) {
                         String json = body.string();
@@ -87,8 +86,6 @@ public class TrailersLoaderCallbacks implements LoaderManager.LoaderCallbacks<Li
                     } else {
                         Log.e(TAG, String.format("loadInBackground: Videos request to %s was not successful.", videosUrl));
                     }
-                } finally {
-                    response.close();
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to parse videos json response: ", e);

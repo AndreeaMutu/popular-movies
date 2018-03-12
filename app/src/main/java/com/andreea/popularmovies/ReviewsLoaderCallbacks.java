@@ -77,8 +77,7 @@ public class ReviewsLoaderCallbacks implements LoaderManager.LoaderCallbacks<Lis
                     .get()
                     .build();
             try {
-                Response response = client.newCall(request).execute();
-                try {
+                try (Response response = client.newCall(request).execute()) {
                     ResponseBody body = response.body();
                     if (response.isSuccessful() && body != null) {
                         String json = body.string();
@@ -87,8 +86,6 @@ public class ReviewsLoaderCallbacks implements LoaderManager.LoaderCallbacks<Lis
                     } else {
                         Log.e(TAG, String.format("loadInBackground: Reviews request to %s was not successful.", reviewsUrl));
                     }
-                } finally {
-                    response.close();
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to parse reviews json response: ", e);

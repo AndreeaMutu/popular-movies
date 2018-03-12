@@ -44,9 +44,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     }
 
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
-        private TextView reviewAuthor;
-        private TextView reviewContent;
-        private TextView reviewLink;
+        private final TextView reviewAuthor;
+        private final TextView reviewContent;
+        private final TextView reviewLink;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);

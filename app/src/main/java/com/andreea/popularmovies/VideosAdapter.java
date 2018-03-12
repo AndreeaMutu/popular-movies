@@ -61,8 +61,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
     }
 
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
-        private TextView videoTitleTextView;
-        private ImageButton playVideoButton;
+        private final TextView videoTitleTextView;
+        private final ImageButton playVideoButton;
 
         public VideoViewHolder(View itemView) {
             super(itemView);

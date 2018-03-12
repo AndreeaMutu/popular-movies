@@ -80,8 +80,7 @@ public class MoviesAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
                 .get()
                 .build();
         try {
-            Response response = client.newCall(request).execute();
-            try {
+            try (Response response = client.newCall(request).execute()) {
                 ResponseBody body = response.body();
                 if (response.isSuccessful() && body != null) {
                     String json = body.string();
@@ -90,8 +89,6 @@ public class MoviesAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
                 } else {
                     Log.e(TAG, String.format("loadInBackground: Movies request to %s was not successful.", moviesUrl));
                 }
-            } finally {
-                response.close();
             }
         } catch (IOException e) {
             Log.e(TAG, "Failed to parse movies json response: ", e);
