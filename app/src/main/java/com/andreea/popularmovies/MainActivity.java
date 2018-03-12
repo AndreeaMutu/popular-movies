@@ -18,10 +18,14 @@ import com.andreea.popularmovies.utils.NetworkUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_LOADER_ID;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIES_SORT_BY_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_DETAILS_KEY;
 import static com.andreea.popularmovies.utils.MovieConstants.MOVIE_GRID_COLUMNS;
+import static com.andreea.popularmovies.utils.MovieConstants.SELECTED_SORT_OPTION;
 import static com.andreea.popularmovies.utils.MovieSortOrder.FAVORITE;
 import static com.andreea.popularmovies.utils.MovieSortOrder.POPULAR;
 import static com.andreea.popularmovies.utils.MovieSortOrder.TOP_RATED;
@@ -31,32 +35,33 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private final Bundle sortOrderBundle = new Bundle();
-    private RecyclerView recyclerView;
-    private View snackbarView;
+    @BindView(R.id.movies_grid_view)
+    RecyclerView recyclerView;
+    @BindView(android.R.id.content)
+    View snackbarView;
+    private int sortOptionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        snackbarView = findViewById(android.R.id.content);
-        recyclerView = (RecyclerView) findViewById(R.id.movies_grid_view);
+        ButterKnife.bind(this);
+
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, MOVIE_GRID_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        if (!NetworkUtils.isConnectedToNetwork(this)) {
-            displayNoInternetMessage();
-            return;
+        if (savedInstanceState != null) {
+            sortOptionId = savedInstanceState.getInt(SELECTED_SORT_OPTION);
+        } else {
+            sortOptionId = R.id.sort_popular;
         }
-
-        // Set default sort order to Popular Movies
-        sortOrderBundle.putString(MOVIES_SORT_BY_KEY, POPULAR.getValue());
-
-        // Initialize movie loader
-        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
+        loadMovies();
     }
 
-    private void displayNoInternetMessage() {
-        Snackbar.make(snackbarView, getString(R.string.no_internet_message), Snackbar.LENGTH_LONG).show();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_SORT_OPTION, sortOptionId);
     }
 
     @Override
@@ -67,30 +72,28 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        this.sortOptionId = item.getItemId();
+        item.setChecked(true);
+        loadMovies();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void loadMovies() {
         if (!NetworkUtils.isConnectedToNetwork(this)) {
             displayNoInternetMessage();
-            return super.onOptionsItemSelected(item);
-        }
-        int selectedItemId = item.getItemId();
-        if (selectedItemId == R.id.sort_popular) {
-            item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, POPULAR.getValue());
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
-            return true;
-        }
-        if (selectedItemId == R.id.sort_rating) {
-            item.setChecked(true);
-            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, TOP_RATED.getValue());
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
-            return true;
-        }
-        if (selectedItemId == R.id.sort_favorites) {
-            item.setChecked(true);
             sortOrderBundle.putString(MOVIES_SORT_BY_KEY, FAVORITE.getValue());
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
-            return true;
+        } else if (sortOptionId == R.id.sort_popular) {
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, POPULAR.getValue());
+        } else if (sortOptionId == R.id.sort_rating) {
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, TOP_RATED.getValue());
+        } else if (sortOptionId == R.id.sort_favorites) {
+            sortOrderBundle.putString(MOVIES_SORT_BY_KEY, FAVORITE.getValue());
         }
-        return super.onOptionsItemSelected(item);
+        getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, sortOrderBundle, this);
+    }
+
+    private void displayNoInternetMessage() {
+        Snackbar.make(snackbarView, getString(R.string.no_internet_message), Snackbar.LENGTH_LONG).show();
     }
 
     @Override

@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -92,6 +94,15 @@ public class DetailsActivity extends AppCompatActivity {
         movieIdBundle.putLong(MOVIE_ID_KEY, movie.getId());
         getSupportLoaderManager().initLoader(REVIEWS_LOADER_ID, movieIdBundle, new ReviewsLoaderCallbacks(this, reviewsAdapter));
         getSupportLoaderManager().initLoader(VIDEOS_LOADER_ID, movieIdBundle, new TrailersLoaderCallbacks(this, videosAdapter));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void displayMovieDetails(final Movie movie) {
