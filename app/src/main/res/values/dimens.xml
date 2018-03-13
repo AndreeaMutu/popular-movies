@@ -4,4 +4,5 @@
     <dimen name="details_layout_margin">8dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
     <dimen name="expanded_toolbar_height">200dp</dimen>
+    <dimen name="trailer_margin">16dp</dimen>
 </resources>

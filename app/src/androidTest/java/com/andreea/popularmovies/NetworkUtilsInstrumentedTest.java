@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 
 import java.net.URL;
 
-import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.POPULAR;
-import static com.andreea.popularmovies.utils.NetworkUtils.MovieSortOrder.TOP_RATED;
-import static org.junit.Assert.*;
+import static com.andreea.popularmovies.utils.MovieSortOrder.POPULAR;
+import static com.andreea.popularmovies.utils.MovieSortOrder.TOP_RATED;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.

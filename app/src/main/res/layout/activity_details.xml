@@ -36,6 +36,16 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/favorite_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/details_layout_margin"
+        android:onClick="onClickAddFavorite"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@android:drawable/btn_star_big_off" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,8 +55,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/details_layout_margin">
+            android:layout_margin="@dimen/details_layout_margin"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,24 +66,28 @@
                 <ImageView
                     android:id="@+id/movie_poster_iv"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
                     android:layout_margin="@dimen/details_layout_margin"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
                     android:contentDescription="@string/movie_poster_description" />
 
                 <LinearLayout
-                    android:layout_height="wrap_content"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/details_layout_margin"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/details_layout_margin">
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/release_date_tv"
+                        style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <TextView
                         android:id="@+id/vote_average_tv"
+                        style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -81,9 +95,49 @@
 
             <TextView
                 android:id="@+id/plot_synopsis_tv"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/details_layout_margin"/>
+                android:layout_margin="@dimen/details_layout_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/trailers_title_tv"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:text="@string/trailers_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailers_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/reviews_title_tv"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:text="@string/reviews_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/details_layout_margin" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

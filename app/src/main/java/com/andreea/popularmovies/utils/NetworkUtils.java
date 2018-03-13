@@ -21,6 +21,10 @@ public final class NetworkUtils {
     private static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w185/";
 
+    private static final String REVIEWS_PATH = "reviews";
+    private static final String VIDEOS_PATH = "videos";
+    public static final String BASE_YOUTUBE_URI = "http://www.youtube.com";
+
     private NetworkUtils() {
     }
 
@@ -57,17 +61,46 @@ public final class NetworkUtils {
         return BASE_POSTER_URL + posterPath;
     }
 
-    public enum MovieSortOrder {
-        POPULAR("popular"),
-        TOP_RATED("top_rated");
-        private final String value;
+    public static URL buildMovieReviewsUrl(long movieId, String movieApiKey) {
+        Uri builtUri = Uri.parse(BASE_MOVIE_URL).buildUpon()
+                .appendPath(Long.toString(movieId))
+                .appendPath(REVIEWS_PATH)
+                .appendQueryParameter(PAGE_PARAM, DEFAULT_PAGE)
+                .appendQueryParameter(LANGUAGE_PARAM, DEFAULT_LANGUAGE)
+                .appendQueryParameter(API_KEY_PARAM, movieApiKey)
+                .build();
 
-        MovieSortOrder(String value) {
-            this.value = value;
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Failed to build movie db reviews URL:", e);
         }
+        return url;
+    }
 
-        public String getValue() {
-            return value;
+    public static URL buildMovieVideosUrl(long movieId, String movieApiKey) {
+        Uri builtUri = Uri.parse(BASE_MOVIE_URL).buildUpon()
+                .appendPath(Long.toString(movieId))
+                .appendPath(VIDEOS_PATH)
+                .appendQueryParameter(LANGUAGE_PARAM, DEFAULT_LANGUAGE)
+                .appendQueryParameter(API_KEY_PARAM, movieApiKey)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Failed to build movie db videos URL:", e);
         }
+        return url;
+    }
+
+    public static Uri buildYoutubeUri(String videoKey){
+        return Uri.parse(BASE_YOUTUBE_URI).buildUpon()
+                .appendPath("watch")
+                .appendQueryParameter("v", videoKey)
+                .build();
+
     }
 }

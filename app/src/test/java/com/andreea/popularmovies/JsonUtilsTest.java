@@ -52,5 +52,6 @@ public class JsonUtilsTest {
         Assert.assertEquals(overview, actualMovie.getOverview());
         Assert.assertEquals(voteAverage, actualMovie.getVoteAverage(), 0);
         Assert.assertEquals(releaseDate, actualMovie.getReleaseDate());
+        Assert.assertFalse(actualMovie.isFavorite());
     }
 }
