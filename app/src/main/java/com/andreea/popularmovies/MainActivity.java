@@ -59,6 +59,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (sortOptionId == R.id.sort_favorites) {
+            // Refresh favorites when going back from Details
+            loadMovies();
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_SORT_OPTION, sortOptionId);
