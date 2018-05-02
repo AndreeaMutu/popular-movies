@@ -57,7 +57,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.PosterView
         final Movie movie = movieList.get(position);
         String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
         Picasso.with(context)
-                .load(moviePosterUrl)
+                .load(R.drawable.zoo)
                 .placeholder(android.R.drawable.progress_horizontal)
                 .error(android.R.drawable.stat_notify_error)
                 .into(holder.posterImageView, new Callback() {

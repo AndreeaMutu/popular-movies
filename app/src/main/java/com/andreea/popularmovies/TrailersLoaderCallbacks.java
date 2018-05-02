@@ -68,29 +68,62 @@ public class TrailersLoaderCallbacks implements LoaderManager.LoaderCallbacks<Li
 
         @Override
         public List<Video> loadInBackground() {
-            long movieId = args.getLong(MOVIE_ID_KEY);
-            URL videosUrl = NetworkUtils.buildMovieVideosUrl(movieId, API_KEY);
-
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(videosUrl)
-                    .get()
-                    .build();
-            try {
-                try (Response response = client.newCall(request).execute()) {
-                    ResponseBody body = response.body();
-                    if (response.isSuccessful() && body != null) {
-                        String json = body.string();
-                        Log.d(TAG, "loadInBackground: " + json);
-                        return JsonUtils.parseVideosResponse(json);
-                    } else {
-                        Log.e(TAG, String.format("loadInBackground: Videos request to %s was not successful.", videosUrl));
-                    }
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Failed to parse videos json response: ", e);
-            }
-            return Collections.emptyList();
+            String json = "{\n" +
+                    "  \"id\": 269149,\n" +
+                    "  \"results\": [\n" +
+                    "    {\n" +
+                    "      \"id\": \"571cb2c0c3a36843150006ed\",\n" +
+                    "      \"iso_639_1\": \"en\",\n" +
+                    "      \"iso_3166_1\": \"US\",\n" +
+                    "      \"key\": \"zQ2XkyDTW34\",\n" +
+                    "      \"name\": \"Have a Donut\",\n" +
+                    "      \"site\": \"YouTube\",\n" +
+                    "      \"size\": 1080,\n" +
+                    "      \"type\": \"Clip\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\": \"571cb2f5c3a36842aa00078c\",\n" +
+                    "      \"iso_639_1\": \"en\",\n" +
+                    "      \"iso_3166_1\": \"US\",\n" +
+                    "      \"key\": \"g9lmhBYB11U\",\n" +
+                    "      \"name\": \"Official US Teaser Trailer\",\n" +
+                    "      \"site\": \"YouTube\",\n" +
+                    "      \"size\": 1080,\n" +
+                    "      \"type\": \"Trailer\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\": \"571cb34bc3a3684e98001257\",\n" +
+                    "      \"iso_639_1\": \"en\",\n" +
+                    "      \"iso_3166_1\": \"US\",\n" +
+                    "      \"key\": \"b8hYj0ROMo4\",\n" +
+                    "      \"name\": \"Elephant in the Room\",\n" +
+                    "      \"site\": \"YouTube\",\n" +
+                    "      \"size\": 1080,\n" +
+                    "      \"type\": \"Clip\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\": \"5797586d9251410639002054\",\n" +
+                    "      \"iso_639_1\": \"en\",\n" +
+                    "      \"iso_3166_1\": \"US\",\n" +
+                    "      \"key\": \"jWM0ct-OLsM\",\n" +
+                    "      \"name\": \"Official US Trailer #2\",\n" +
+                    "      \"site\": \"YouTube\",\n" +
+                    "      \"size\": 1080,\n" +
+                    "      \"type\": \"Trailer\"\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "      \"id\": \"58f21fb6c3a3682e95009661\",\n" +
+                    "      \"iso_639_1\": \"en\",\n" +
+                    "      \"iso_3166_1\": \"US\",\n" +
+                    "      \"key\": \"bY73vFGhSVk\",\n" +
+                    "      \"name\": \"Official US Sloth Trailer\",\n" +
+                    "      \"site\": \"YouTube\",\n" +
+                    "      \"size\": 1080,\n" +
+                    "      \"type\": \"Trailer\"\n" +
+                    "    }\n" +
+                    "  ]\n" +
+                    "}";
+            return JsonUtils.parseVideosResponse(json);
         }
 
         @Override

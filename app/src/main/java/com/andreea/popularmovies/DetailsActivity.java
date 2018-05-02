@@ -116,7 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
 
             String moviePosterUrl = NetworkUtils.buildPosterUrl(movie.getPosterPath());
             Picasso.with(this)
-                    .load(moviePosterUrl)
+                    .load(R.drawable.zoo)
                     .placeholder(android.R.drawable.progress_horizontal)
                     .error(android.R.drawable.stat_notify_error)
                     .into(posterImageView, new Callback() {
