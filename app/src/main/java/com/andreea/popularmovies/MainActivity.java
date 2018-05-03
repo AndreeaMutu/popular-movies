@@ -48,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, MOVIE_GRID_COLUMNS);
-        recyclerView.setLayoutManager(mLayoutManager);
+        if (recyclerView!=null){
+            recyclerView.setLayoutManager(mLayoutManager);
+        }
 
         if (savedInstanceState != null) {
             sortOptionId = savedInstanceState.getInt(SELECTED_SORT_OPTION);
@@ -120,8 +122,10 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
         MoviesAdapter adapter = new MoviesAdapter(this, data, this);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        if (recyclerView!=null){
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
