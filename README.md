@@ -5,7 +5,9 @@ Popular Movies App Udacity Project
 
 ## Running the code
 * Create an account at https://www.themoviedb.org/ and request an api key
+* Import the project into Android Studio
 * Add your TMDb api key in _gradle.properties_: `API_KEY="<MyKey>"`
+* Build and install the app
 
 ## Features
 
